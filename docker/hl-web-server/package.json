@@ -1,0 +1,20 @@
+{
+  "name": "hl-web-server",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "hlsdk-portable": "latest",
+    "esbuild": "0.25.11",
+    "jszip": "3.10.1",
+    "typescript": "^5.9.3",
+    "vite": "7.1.11",
+    "xash3d-fwgs": "latest"
+  }
+}

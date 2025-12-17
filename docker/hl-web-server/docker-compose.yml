@@ -1,0 +1,20 @@
+services:
+  xash3d:
+    image: yohimik/hl-web-server:latest
+    build:
+      context: ../../
+      dockerfile: ./docker/hl-web-server/Dockerfile
+      tags:
+        - yohimik/hl-web-server:latest
+        - yohimik/hl-web-server:${TAG}
+    restart: always
+    platform: linux/386
+    environment:
+      PORT: 27018
+      IP: 192.168.50.123
+    volumes:
+      - "./valve.zip:/xashds/public/valve.zip"
+    ports:
+      - "27016:27016"
+      - "27018:27018"
+      - "27018:27018/udp"

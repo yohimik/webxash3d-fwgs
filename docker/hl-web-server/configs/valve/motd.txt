@@ -1,0 +1,14 @@
+Welcome to Xash3D FWGS Dedicated Server Docker
+
+
+This server uses Docker.
+For more information visit
+https://github.com/FWGS/xashds-docker
+
+
+
+
+Love old-school gaming and Half-Life?
+Join us on Discord
+Half-Life https://discord.com/invite/halflife
+Xash3D FWGS https://discord.me/fwgs
