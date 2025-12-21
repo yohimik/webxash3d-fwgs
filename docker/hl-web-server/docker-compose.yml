@@ -1,16 +1,15 @@
 services:
   xash3d:
-    image: yohimik/multi-web-server:latest
+    image: yohimik/hl-web-server:latest
     build:
       context: ../../
-      dockerfile: ./docker/multi-web-server/Dockerfile
+      dockerfile: ./docker/hl-web-server/Dockerfile
       tags:
-        - yohimik/multi-web-server:latest
-        - yohimik/multi-web-server:${TAG}
+        - yohimik/hl-web-server:latest
+        - yohimik/hl-web-server:${TAG}
     restart: always
     platform: linux/386
     environment:
-      GAME_TYPE: "cstrike"
       PORT: 27018
       IP: 192.168.50.123
     volumes:
