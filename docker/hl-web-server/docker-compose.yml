@@ -1,12 +1,12 @@
 services:
   xash3d:
-    image: yohimik/cs-web-server:latest
+    image: yohimik/hl-web-server:latest
     build:
       context: ../../
-      dockerfile: ./docker/cs-web-server/Dockerfile
+      dockerfile: ./docker/hl-web-server/Dockerfile
       tags:
-        - yohimik/cs-web-server:latest
-        - yohimik/cs-web-server:${TAG}
+        - yohimik/hl-web-server:latest
+        - yohimik/hl-web-server:${TAG}
     restart: always
     platform: linux/386
     environment:

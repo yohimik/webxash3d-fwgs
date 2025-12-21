@@ -42,6 +42,27 @@ importers:
         specifier: latest
         version: 1.2.1
 
+  docker/hl-web-server:
+    devDependencies:
+      esbuild:
+        specifier: 0.25.11
+        version: 0.25.11
+      hlsdk-portable:
+        specifier: latest
+        version: 0.1.2
+      jszip:
+        specifier: 3.10.1
+        version: 3.10.1
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vite:
+        specifier: 7.1.11
+        version: 7.1.11(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.1)
+      xash3d-fwgs:
+        specifier: latest
+        version: 1.2.1
+
   examples/react-typescript-cs16:
     dependencies:
       '@types/node':
