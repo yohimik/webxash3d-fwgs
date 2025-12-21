@@ -1,12 +1,33 @@
 import {loadAsync} from 'jszip'
 import filesystemURL from 'xash3d-fwgs/filesystem_stdio.wasm?url'
 import xashURL from 'xash3d-fwgs/xash.wasm?url'
-import menuURL from 'xash3d-fwgs/cl_dll/menu_emscripten_wasm32.wasm?url'
-import clientURL from 'hlsdk-portable/cl_dlls/client_emscripten_wasm32.wasm?url'
-import serverURL from 'hlsdk-portable/dlls/hl_emscripten_wasm32.so?url'
 import gl4esURL from 'xash3d-fwgs/libref_webgl2.wasm?url'
-import extrasURL from 'xash3d-fwgs/extras.pk3?url'
+
+// CS16 Client
+import cs16MenuURL from 'cs16-client/cl_dll/menu_emscripten_wasm32.wasm?url'
+import cs16ClientURL from 'cs16-client/cl_dlls/client_emscripten_wasm32.wasm?url'
+import cs16ServerURL from 'cs16-client/dlls/cs_emscripten_wasm32.so?url'
+import cs16ExtrasURL from 'cs16-client/extras.pk3?url'
+
+// HLSDK Portable
+import hlsdkMenuURL from 'xash3d-fwgs/cl_dll/menu_emscripten_wasm32.wasm?url'
+import hlsdkClientURL from 'hlsdk-portable/cl_dlls/client_emscripten_wasm32.wasm?url'
+import hlsdkServerURL from 'hlsdk-portable/dlls/hl_emscripten_wasm32.so?url'
+import hlsdkExtrasURL from 'xash3d-fwgs/extras.pk3?url'
+
 import {Xash3DWebRTC} from "./webrtc";
+
+// Mapeamento de bibliotecas
+const libraryMap: Record<string, string> = {
+    'cs16-client/cl_dll/menu_emscripten_wasm32.wasm': cs16MenuURL,
+    'cs16-client/cl_dlls/client_emscripten_wasm32.wasm': cs16ClientURL,
+    'cs16-client/dlls/cs_emscripten_wasm32.so': cs16ServerURL,
+    'cs16-client/extras.pk3': cs16ExtrasURL,
+    'xash3d-fwgs/cl_dll/menu_emscripten_wasm32.wasm': hlsdkMenuURL,
+    'hlsdk-portable/cl_dlls/client_emscripten_wasm32.wasm': hlsdkClientURL,
+    'hlsdk-portable/dlls/hl_emscripten_wasm32.so': hlsdkServerURL,
+    'xash3d-fwgs/extras.pk3': hlsdkExtrasURL,
+};
 
 const touchControls = document.getElementById('touchControls') as HTMLInputElement
 touchControls.addEventListener('change', () => {
@@ -50,9 +71,23 @@ async function fetchWithProgress(url: string) {
 }
 
 async function main() {
+    // Fetch server configuration
+    const configRes = await fetch('/config')
+    const config = await configRes.json()
+    
+    // Resolve libraries from static mapping
+    const menuURL = libraryMap[config.libraries.menu]
+    const clientURL = libraryMap[config.libraries.client]
+    const serverURL = libraryMap[config.libraries.server]
+    const extrasURL = libraryMap[config.libraries.extras]
+    
+    if (!menuURL || !clientURL || !serverURL || !extrasURL) {
+        throw new Error('Unknown library configuration from server')
+    }
+    
     const x = new Xash3DWebRTC({
         canvas: document.getElementById('canvas') as HTMLCanvasElement,
-        arguments: ['-windowed'],
+        arguments: config.arguments || ['-windowed'],
         libraries: {
             filesystem: filesystemURL,
             xash: xashURL,
@@ -63,9 +98,9 @@ async function main() {
                 gl4es: gl4esURL,
             }
         },
-        dynamicLibraries: ['dlls/hl_emscripten_wasm32.so', '/rwdir/filesystem_stdio.wasm'],
+        dynamicLibraries: [config.server_lib, '/rwdir/filesystem_stdio.wasm'],
         filesMap: {
-            'dlls/hl_emscripten_wasm32.so': serverURL,
+            [config.server_lib]: serverURL,
             '/rwdir/filesystem_stdio.wasm': filesystemURL,
         },
     });
@@ -92,7 +127,7 @@ async function main() {
         x.em.FS.writeFile(path, await file.async("uint8array"));
     }))
 
-    x.em.FS.writeFile('/rodir/valve/extras.pk3', new Uint8Array(extras))
+    x.em.FS.writeFile(`/rodir/${config.game_dir}/extras.pk3`, new Uint8Array(extras))
     x.em.FS.chdir('/rodir')
 
     document.getElementById('logo')!.style.animationName = 'pulsate-end'
@@ -107,6 +142,14 @@ async function main() {
         x.Cmd_ExecuteString('touch_enable 1')
     }
     x.Cmd_ExecuteString(`name "${username}"`)
+    
+    // Execute custom server commands
+    if (config.console && Array.isArray(config.console)) {
+        config.console.forEach((cmd: string) => {
+            x.Cmd_ExecuteString(cmd)
+        })
+    }
+    
     x.Cmd_ExecuteString('connect 127.0.0.1:8080')
 
     window.addEventListener('beforeunload', (event) => {

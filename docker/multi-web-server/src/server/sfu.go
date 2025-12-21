@@ -502,6 +502,40 @@ type Server struct {
 
 var disabledXPoweredBy = false
 var xPoweredByValue = "yohimik"
+var gameType = "hlsdk"
+var consoleCommands = []string{}
+
+type GameConfig struct {
+	Arguments  []string          `json:"arguments"`
+	Libraries  map[string]string `json:"libraries"`
+	GameDir    string            `json:"game_dir"`
+	ServerLib  string            `json:"server_lib"`
+}
+
+var gameConfigs = map[string]GameConfig{
+	"cstrike": {
+		Arguments: []string{"-windowed", "-game", "cstrike"},
+		Libraries: map[string]string{
+			"menu":   "cs16-client/cl_dll/menu_emscripten_wasm32.wasm",
+			"client": "cs16-client/cl_dlls/client_emscripten_wasm32.wasm",
+			"server": "cs16-client/dlls/cs_emscripten_wasm32.so",
+			"extras": "cs16-client/extras.pk3",
+		},
+		GameDir:   "cstrike",
+		ServerLib: "dlls/cs_emscripten_wasm32.so",
+	},
+	"hlsdk": {
+		Arguments: []string{"-windowed"},
+		Libraries: map[string]string{
+			"menu":   "xash3d-fwgs/cl_dll/menu_emscripten_wasm32.wasm",
+			"client": "hlsdk-portable/cl_dlls/client_emscripten_wasm32.wasm",
+			"server": "hlsdk-portable/dlls/hl_emscripten_wasm32.so",
+			"extras": "xash3d-fwgs/extras.pk3",
+		},
+		GameDir:   "valve",
+		ServerLib: "dlls/hl_emscripten_wasm32.so",
+	},
+}
 
 func init() {
 	disable, _ := os.LookupEnv("DISABLE_X_POWERED_BY")
@@ -512,6 +546,38 @@ func init() {
 	if has {
 		xPoweredByValue = xPoweredValue
 	}
+	game, has := os.LookupEnv("GAME_TYPE")
+	if has {
+		gameType = game
+	}
+	console, has := os.LookupEnv("CONSOLE_COMMANDS")
+	if has && console != "" {
+		err := json.Unmarshal([]byte(console), &consoleCommands)
+		if err != nil {
+			log.Warnf("Failed to parse CONSOLE_COMMANDS: %v", err)
+		}
+	}
+}
+
+func configHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	
+	// Look up game_type configuration or use default
+	gameConfig, exists := gameConfigs[gameType]
+	if !exists {
+		log.Warnf("Unknown game_type: %s, using hlsdk as default", gameType)
+		gameConfig = gameConfigs["hlsdk"]
+	}
+	
+	config := map[string]interface{}{
+		"game_type":  gameType,
+		"console":    consoleCommands,
+		"arguments":  gameConfig.Arguments,
+		"libraries":  gameConfig.Libraries,
+		"game_dir":   gameConfig.GameDir,
+		"server_lib": gameConfig.ServerLib,
+	}
+	json.NewEncoder(w).Encode(config)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -521,6 +587,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/websocket":
 		websocketHandler(w, r)
+	case "/config":
+		configHandler(w, r)
 	default:
 		p := r.URL.Path
 		if r.URL.Path == "/" {

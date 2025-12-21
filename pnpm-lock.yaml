@@ -29,6 +29,9 @@ importers:
       esbuild:
         specifier: 0.25.11
         version: 0.25.11
+      hlsdk-portable:
+        specifier: latest
+        version: 0.1.2
       jszip:
         specifier: 3.10.1
         version: 3.10.1

@@ -1,5 +1,5 @@
 {
-  "name": "hl-web-server",
+  "name": "multi-web-server",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "cs16-client": "latest",
     "hlsdk-portable": "latest",
     "esbuild": "0.25.11",
     "jszip": "3.10.1",

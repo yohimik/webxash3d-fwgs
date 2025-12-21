@@ -1,4 +1,4 @@
-module github.com/yohimik/webxash3d-fwgs/docker/hl-web-server
+module github.com/yohimik/webxash3d-fwgs/docker/multi-web-server
 
 go 1.25.1
 

@@ -16,14 +16,14 @@ RUN ./waf configure -T release -d --enable-lto --enable-openmp && ./waf build
 FROM golang:1.25.1 AS go
 
 WORKDIR /go
-COPY docker/hl-web-server/go.mod go.mod
-COPY docker/hl-web-server/go.sum go.sum
+COPY docker/multi-web-server/go.mod go.mod
+COPY docker/multi-web-server/go.sum go.sum
 RUN go mod download
 RUN mkdir -p ../github.com/yohimik/goxash3d-fwgs
 RUN cp -r $(go list -m -f '{{.Dir}}' github.com/yohimik/goxash3d-fwgs)/* ../github.com/yohimik/goxash3d-fwgs
 RUN echo 'replace github.com/yohimik/goxash3d-fwgs => ../github.com/yohimik/goxash3d-fwgs' >> go.mod
 
-COPY docker/hl-web-server/src/server src/server
+COPY docker/multi-web-server/src/server src/server
 COPY --from=engine /xash/build/engine/libxash.a ../github.com/yohimik/goxash3d-fwgs/pkg/libxash.a
 COPY --from=engine /xash/build/public/libbuild_vcs.a ../github.com/yohimik/goxash3d-fwgs/pkg/libbuild_vcs.a
 COPY --from=engine /xash/build/public/libpublic.a ../github.com/yohimik/goxash3d-fwgs/pkg/libpublic.a
@@ -70,7 +70,8 @@ RUN touch /opt/xash/xashds/valve/banned.cfg
 WORKDIR /opt/xash/xashds
 
 # Copy default config
-COPY docker/hl-web-server/configs/valve valve
+COPY docker/multi-web-server/configs/valve valve
+COPY docker/multi-web-server/configs/cstrike cstrike
 
 FROM --platform=linux/amd64 node:22-alpine AS client
 
@@ -78,18 +79,19 @@ RUN npm install -g pnpm
 
 WORKDIR /client
 
-COPY docker/hl-web-server/package.json docker/hl-web-server/package.json
+COPY docker/multi-web-server/package.json docker/multi-web-server/package.json
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
-COPY docker/hl-web-server/vite.config.ts docker/hl-web-server/vite.config.ts
+COPY docker/multi-web-server/vite.config.ts docker/multi-web-server/vite.config.ts
 COPY packages/xash3d-fwgs packages/xash3d-fwgs
+COPY packages/cs16-client packages/cs16-client
 COPY packages/hlsdk-portable packages/hlsdk-portable
-COPY docker/hl-web-server/tsconfig.json docker/hl-web-server/tsconfig.json
-COPY docker/hl-web-server/src/client docker/hl-web-server/src/client
+COPY docker/multi-web-server/tsconfig.json docker/multi-web-server/tsconfig.json
+COPY docker/multi-web-server/src/client docker/multi-web-server/src/client
 
-WORKDIR /client/docker/hl-web-server
+WORKDIR /client/docker/multi-web-server
 
 RUN pnpm run build
 
@@ -114,14 +116,13 @@ ENV LD_LIBRARY_PATH=/xashds
 
 COPY --from=hlds /opt/xash/xashds .
 COPY --from=go /go/xash ./xash
-COPY --from=client /client/docker/hl-web-server/src/client/dist ./public
+COPY --from=client /client/docker/multi-web-server/src/client/dist ./public
 COPY --from=engine /xash/build/filesystem/filesystem_stdio.so ./filesystem_stdio.so
 COPY --from=engine "/usr/lib/i386-linux-gnu/libstdc++.so.6" "./libstdc++.so.6"
 COPY --from=engine "/usr/lib/i386-linux-gnu/libgcc_s.so.1" "./libgcc_s.so.1"
+COPY --chmod=755 docker/multi-web-server/entrypoint.sh ./entrypoint.sh
+
 EXPOSE 27015/udp
 
-# Start server
-ENTRYPOINT ["./xash", "+ip", "0.0.0.0", "-port", "27015", "+console"]
-
-# Default start parameters
-CMD ["+map crossfire", "+maxplayers", "16"]
+# Start server with dynamic entrypoint
+ENTRYPOINT ["./entrypoint.sh"]
