@@ -79,6 +79,7 @@ services:
     ports:
       - "27016:27016"
       - "<your-port>:<your-port>"
+      - "<your-port>:<your-port>/udp"
 
 ```
 
