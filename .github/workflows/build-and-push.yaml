@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'cs-web-server@*'
+      - 'cs-web-server-metpamx@*'
 
 jobs:
   setup:
@@ -72,13 +73,15 @@ jobs:
         run: |
           IMAGE_NAME=yohimik/${{ needs.setup.outputs.image }}
           README_PATH=docker/${{ needs.setup.outputs.image }}/README.docker.md
-          DESCRIPTION=$(cat $README_PATH | jq -Rs .)
+          DESCRIPTION=$(jq -Rs . < $README_PATH)
+
+          TOKEN=$(curl -s -H "Content-Type: application/json" \
+            -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" \
+            https://hub.docker.com/v2/users/login/ | jq -r .token)
 
           curl -X PATCH https://hub.docker.com/v2/repositories/$IMAGE_NAME/ \
             -H "Content-Type: application/json" \
-            -H "Authorization: JWT $(curl -s -H "Content-Type: application/json" \
-              -X POST -d '{"username": "${{ secrets.DOCKER_USERNAME }}", "password": "${{ secrets.DOCKER_PASSWORD }}"}' \
-              https://hub.docker.com/v2/users/login/ | jq -r .token)" \
+            -H "Authorization: Bearer $TOKEN" \
             -d "{\"full_description\": $DESCRIPTION}"
 
   release:

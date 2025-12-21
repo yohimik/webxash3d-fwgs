@@ -33,6 +33,15 @@ x.quit()
 * [cs16-client](packages/cs16-client): Counter-Strike 1.6 client build for the web.
 * [webxash3d-mserver](packages/webxash3d-mserver): WebXash3D MServer written in TypeScript for in a game server list.
 
+### Docker Servers
+
+Ready-to-deploy Docker images for Counter-Strike 1.6 web servers:
+
+* [cs-web-server](docker/cs-web-server): Vanilla CS 1.6 web server with client and dedicated server
+* [cs-web-server-metpamx](docker/cs-web-server-metpamx): CS 1.6 web server with **Metamod-P & AMX Mod X pre-installed**
+
+Both support WebRTC for browser-to-server networking and are fully Dockerized for easy deployment.
+
 ## Getting Started 
 
 ### Clone the repository
@@ -103,10 +112,6 @@ Need help? Want to share your project or ideas?
 **[Join our Discord community](https://discord.gg/cRNGjWfTDd)** to connect with others!
 
 # TODO
-
-## Metamod and AMX Mod X support
-
-Add support for Metamod and AMX Mod X to work with many mods
 
 ## WebRTC/UDP proxy
 
