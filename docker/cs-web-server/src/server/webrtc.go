@@ -211,20 +211,24 @@ func dispatchKeyFrame() {
 }
 
 func ReadLoop(d io.Reader, ip [4]byte) {
+	// Reuse buffer to reduce allocations
+	buffer := make([]byte, messageSize)
 	for {
-		buffer := make([]byte, messageSize)
 		n, err := d.Read(buffer)
 		if err != nil {
 			fmt.Println("Datachannel closed; Exit the readloop:", err)
 
 			return
 		}
+		// Make a copy of the data since we're reusing the buffer
+		data := make([]byte, n)
+		copy(data, buffer[:n])
 		net.PushPacket(goxash3d_fwgs.Packet{
 			Addr: goxash3d_fwgs.Addr{
 				IP:   ip,
 				Port: 1000,
 			},
-			Data: buffer[:n],
+			Data: data,
 		})
 	}
 }
@@ -354,6 +358,7 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) { // nolint
 		trackLocal := addTrack(t)
 		defer removeTrack(trackLocal)
 
+		// Reuse buffer and packet to reduce allocations
 		buf := make([]byte, 1500)
 		rtpPkt := &rtp.Packet{}
 
