@@ -76,7 +76,9 @@ func runSFU() {
 
 	// request a keyframe every 3 seconds
 	go func() {
-		for range time.NewTicker(time.Second * 3).C {
+		ticker := time.NewTicker(time.Second * 3)
+		defer ticker.Stop()
+		for range ticker.C {
 			dispatchKeyFrame()
 		}
 	}()
