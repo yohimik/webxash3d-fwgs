@@ -34,4 +34,9 @@ export const elements = {
   // Maps elements
   mapsSelect: document.getElementById("maps-select") as HTMLSelectElement,
   changelevelBtn: document.getElementById("changelevel-btn") as HTMLButtonElement,
+
+  // Settings status elements
+  settingsStatus: document.getElementById("settings-status")!,
+  settingsStatusText: document.getElementById("settings-status-text")!,
+  settingsRefreshBtn: document.getElementById("settings-refresh-btn") as HTMLButtonElement,
 };

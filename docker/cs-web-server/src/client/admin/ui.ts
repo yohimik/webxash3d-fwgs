@@ -164,19 +164,69 @@ export function setLoginButtonState(loading: boolean): void {
 export function updateMapsList(maps: string[]): void {
   const mapsSelect = document.getElementById("maps-select") as HTMLSelectElement;
   const changelevelBtn = document.getElementById("changelevel-btn") as HTMLButtonElement;
-  
+
   if (!mapsSelect) return;
-  
+
   if (maps.length === 0) {
     mapsSelect.innerHTML = '<option disabled>No maps found. Run "maps *" to list.</option>';
     mapsSelect.disabled = true;
     if (changelevelBtn) changelevelBtn.disabled = true;
     return;
   }
-  
+
   mapsSelect.innerHTML = maps
     .map((map) => `<option value="${map}">${map}</option>`)
     .join("");
   mapsSelect.disabled = false;
   if (changelevelBtn) changelevelBtn.disabled = false;
+}
+
+/**
+ * Shows the settings loading state
+ */
+export function showSettingsLoading(): void {
+  elements.settingsStatus.style.display = 'flex';
+  elements.settingsStatusText.textContent = 'Fetching settings...';
+  elements.settingsStatusText.style.display = 'block';
+  elements.settingsRefreshBtn.style.display = 'none';
+  elements.gameSettingsForm.style.display = 'none';
+}
+
+/**
+ * Shows the settings form
+ */
+export function showSettingsForm(): void {
+  elements.settingsStatus.style.display = 'none';
+  elements.gameSettingsForm.style.display = 'block';
+}
+
+/**
+ * Shows the refresh button after timeout
+ */
+export function showSettingsRefreshButton(): void {
+  elements.settingsStatusText.textContent = 'Failed to load settings';
+  elements.settingsRefreshBtn.style.display = 'block';
+}
+
+/**
+ * Hides a settings row by field name
+ */
+export function hideSettingRow(fieldName: string): void {
+  const input = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+    `#game-settings [name="${fieldName}"]`
+  );
+  if (input) {
+    const row = input.closest('.row');
+    if (row) {
+      row.classList.add('hidden');
+    }
+  }
+}
+
+/**
+ * Shows all settings rows (removes hidden class)
+ */
+export function showAllSettingRows(): void {
+  const rows = document.querySelectorAll('#game-settings .row');
+  rows.forEach(row => row.classList.remove('hidden'));
 }

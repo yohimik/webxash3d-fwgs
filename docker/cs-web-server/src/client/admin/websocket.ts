@@ -1,8 +1,14 @@
-import { updateConnectionStatus, addLog, clearLogs, updateMapsList } from "./ui";
+import {
+  updateConnectionStatus,
+  addLog,
+  clearLogs,
+  updateMapsList,
+} from "./ui";
 import type { TokenData, WebSocketMessage } from "./types";
 import { fetchSalt } from "./auth";
 import { stripAnsiCodes } from "./utils";
 import { elements } from "./dom";
+import { onSettingReceived } from "./commands";
 
 // ============================================
 // WebSocket Management
@@ -92,6 +98,9 @@ function updateSettingFromMessage(message: string): void {
     inputElement.value = currentValue;
   }
 
+  // Notificar que este setting foi recebido
+  onSettingReceived(settingName);
+
   console.log(`Updated setting ${settingName} to ${currentValue}`);
 }
 
@@ -125,12 +134,15 @@ function processMapList(message: string): void {
     const match = logMessage.match(/(.+)\s+\(Half-Life\)/);
 
     if (match && match[1]) {
-      maps.push(match[1]);
+      // Ignore Half-Life single player maps like c1a1, t0a5b, etc.
+      if (!/^\b[ct]\d+a\d+(?:[a-z]\d*)?\b$/.test(match[1])) {
+        maps.push(match[1]);
+      }
     }
   }
 
   console.log("Detected maps:", maps);
-  
+
   // Update map selection UI
   updateMapsList(maps);
 }
@@ -198,9 +210,7 @@ function handleClose(event: CloseEvent): void {
   reconnectTimer = setTimeout(() => {
     if (currentTokenData) {
       addLog("System", "Reconnecting...");
-      fetchSalt().then(() => {
-        connectWebSocket(currentTokenData!, onLogoutCallback!);
-      });
+      connectWebSocket(currentTokenData!, onLogoutCallback!);
     }
   }, 3000) as any;
 }

@@ -174,7 +174,9 @@
                 type="radio"
                 id="tabtwo"
               />
-              <label class="label quick-cmd" for="tabtwo" data-cmd="maps *">Change Map</label>
+              <label class="label quick-cmd" for="tabtwo" data-cmd="maps *"
+                >Change Map</label
+              >
               <div class="panel" tabindex="1">
                 <select id="maps-select" class="cs-select" size="10" disabled>
                   <option disabled>Run "maps *" to list available maps</option>
@@ -198,6 +200,27 @@
                 >Settings</label
               >
               <div class="panel settings-panel" tabindex="1">
+                <!-- Área de loading/status -->
+                <div
+                  id="settings-status"
+                  class="settings-status"
+                  style="display: none; padding: 20px; text-align: center"
+                >
+                  <p
+                    id="settings-status-text"
+                    style="margin-bottom: 15px; color: var(--accent)"
+                  >
+                    Fetching settings...
+                  </p>
+                  <button
+                    id="settings-refresh-btn"
+                    class="cs-btn cs-btn--primary"
+                    style="display: none"
+                  >
+                    Reload Page
+                  </button>
+                </div>
+
                 <form id="game-settings">
                   <div class="settings-grid">
                     <div class="row">
@@ -213,6 +236,28 @@
                           class="cs-input"
                           name="maxplayers"
                           type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Valid teams (blank for all)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_teamlist"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Frag Limit</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_fraglimit"
+                          type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -223,6 +268,7 @@
                           class="cs-input"
                           name="mp_timelimit"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -233,6 +279,7 @@
                           class="cs-input"
                           name="mp_winlimit"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -243,6 +290,7 @@
                           class="cs-input"
                           name="mp_maxrounds"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -253,6 +301,7 @@
                           class="cs-input"
                           name="mp_roundtime"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -263,6 +312,7 @@
                           class="cs-input"
                           name="mp_freezetime"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -273,6 +323,7 @@
                           class="cs-input"
                           name="mp_buytime"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -283,7 +334,31 @@
                           class="cs-input"
                           name="mp_startmoney"
                           type="input"
+                          inputmode="numeric"
                         />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Falling Damage</div>
+                      <div class="col">
+                        <select class="cs-select" name="mp_forcecamera">
+                          <option value="0">Normal</option>
+                          <option value="1">Realistic</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_teamplay"
+                            name="mp_teamplay"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_teamplay"
+                            >Teamplay</label
+                          >
+                        </div>
                       </div>
                     </div>
                     <div class="row full-width">
@@ -296,6 +371,34 @@
                           />
                           <label class="cs-checkbox__label" for="s_footsteps"
                             >Footsteps</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_weaponstay"
+                            name="mp_weaponstay"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_weaponstay"
+                            >Weapon Stay</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_forcerespawn"
+                            name="mp_forcerespawn"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_forcerespawn"
+                            >Force Respawn</label
                           >
                         </div>
                       </div>
@@ -373,6 +476,7 @@
                           class="cs-input"
                           name="mp_hostagepenalty"
                           type="input"
+                          inputmode="numeric"
                         />
                       </div>
                     </div>
@@ -386,6 +490,22 @@
                           />
                           <label class="cs-checkbox__label" for="s_flashlight"
                             >Allow flashlight</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_autocrosshair"
+                            name="mp_autocrosshair"
+                            type="checkbox"
+                          />
+                          <label
+                            class="cs-checkbox__label"
+                            for="s_autocrosshair"
+                            >Autocrosshair</label
                           >
                         </div>
                       </div>

@@ -1,5 +1,12 @@
 import { elements } from "./dom";
-import { addLog } from "./ui";
+import {
+  addLog,
+  showSettingsLoading,
+  showSettingsForm,
+  showSettingsRefreshButton,
+  hideSettingRow,
+  showAllSettingRows
+} from "./ui";
 import type { TokenData } from "./types";
 import { getInputValue } from "./utils";
 
@@ -10,6 +17,9 @@ import { getInputValue } from "./utils";
 let currentTokenData: TokenData | null = null;
 let onLogoutCallback: (() => void) | null = null;
 let originalSettings: Map<string, string> = new Map();
+let receivedSettings: Set<string> = new Set();
+let settingsTimeout: any = null;
+let allSettingNames: string[] = [];
 
 /**
  * Initializes command system
@@ -106,41 +116,11 @@ export function setupQuickCommands(): void {
 
 export function setupGameSettingsHandler(): void {
   elements.gameSettingsCurrent.addEventListener("click", async (e) => {
-    const form = elements.gameSettingsForm;
-    const inputs = form.querySelectorAll("input, select");
+    await fetchGameSettings();
+  });
 
-    // Clear previous cache
-    originalSettings.clear();
-
-    const response = await fetch("/rcon", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${currentTokenData!.token}`,
-      },
-      body: JSON.stringify({
-        command: Array.from(inputs).map(
-          (i) => (i as HTMLInputElement | HTMLSelectElement).name
-        ),
-      }),
-    });
-
-    if (response.status !== 204) {
-      addLog("System", "Failed to get current settings");
-      return;
-    }
-
-    // Store current values after fetch
-    // The WebSocket will update the inputs, so we need to wait a bit
-    setTimeout(() => {
-      for (const input of inputs) {
-        const element = input as HTMLInputElement | HTMLSelectElement;
-        if (element.name) {
-          originalSettings.set(element.name, getInputValue(element));
-        }
-      }
-      addLog("System", "Current settings loaded");
-    }, 500);
+  elements.settingsRefreshBtn.addEventListener("click", () => {
+    window.location.reload();
   });
 
   elements.gameSettingsApply.addEventListener("click", async (e) => {
@@ -169,6 +149,102 @@ export function setupGameSettingsHandler(): void {
       addLog("System", `Applied ${changedCount} setting(s)`);
     }
   });
+}
+
+async function fetchGameSettings(): Promise<void> {
+  const form = elements.gameSettingsForm;
+  const inputs = form.querySelectorAll("input, select");
+
+  showSettingsLoading();
+  showAllSettingRows();
+  receivedSettings.clear();
+  originalSettings.clear();
+
+  allSettingNames = Array.from(inputs).map(
+    (i) => (i as HTMLInputElement | HTMLSelectElement).name
+  ).filter(name => name);
+
+  if (settingsTimeout) {
+    clearTimeout(settingsTimeout);
+  }
+  settingsTimeout = setTimeout(() => {
+    handleSettingsTimeout();
+  }, 2000) as any;
+
+  try {
+    const response = await fetch("/rcon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentTokenData!.token}`,
+      },
+      body: JSON.stringify({
+        command: allSettingNames,
+      }),
+    });
+
+    if (response.status !== 204) {
+      addLog("System", "Failed to get current settings");
+      clearTimeout(settingsTimeout);
+      showSettingsRefreshButton();
+      return;
+    }
+
+    setTimeout(() => {
+      finalizeSettingsFetch();
+    }, 500);
+
+  } catch (error) {
+    addLog("System", `ERROR: ${error}`);
+    clearTimeout(settingsTimeout);
+    showSettingsRefreshButton();
+  }
+}
+
+function handleSettingsTimeout(): void {
+  if (receivedSettings.size === 0) {
+    addLog("System", "Timeout: No settings received from server");
+    showSettingsRefreshButton();
+  } else {
+    finalizeSettingsFetch();
+  }
+}
+
+function finalizeSettingsFetch(): void {
+  if (settingsTimeout) {
+    clearTimeout(settingsTimeout);
+    settingsTimeout = null;
+  }
+
+  if (receivedSettings.size === 0) {
+    showSettingsRefreshButton();
+    return;
+  }
+
+  for (const fieldName of allSettingNames) {
+    if (!receivedSettings.has(fieldName)) {
+      hideSettingRow(fieldName);
+    }
+  }
+
+  for (const fieldName of receivedSettings) {
+    const input = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+      `#game-settings [name="${fieldName}"]`
+    );
+    if (input) {
+      originalSettings.set(fieldName, getInputValue(input));
+    }
+  }
+
+  showSettingsForm();
+  addLog("System", `Loaded ${receivedSettings.size} setting(s)`);
+}
+
+/**
+ * Called by WebSocket when a setting is received
+ */
+export function onSettingReceived(settingName: string): void {
+  receivedSettings.add(settingName);
 }
 
 /**

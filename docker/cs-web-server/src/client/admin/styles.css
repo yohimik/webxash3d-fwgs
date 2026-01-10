@@ -324,11 +324,12 @@ body::before {
   border: 1px solid;
   border-color: var(--border-dark) var(--border-light) var(--border-light)
     var(--border-dark);
-  height: 504px;
+  max-height: 504px;
   overflow-y: auto;
   padding: 8px;
   font-size: 0.85rem;
   margin-bottom: 8px;
+  row-gap: 4px;
 }
 
 .settings-grid .row {
@@ -361,4 +362,22 @@ body::before {
   width: 100%;
   height: 456px;
   margin-bottom: 8px;
+}
+
+/* Settings Loading State */
+.settings-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.settings-status p {
+  letter-spacing: 0.05em;
+}
+
+/* Ocultar linhas de campos que não receberam dados */
+.settings-grid .row.hidden {
+  display: none !important;
 }
