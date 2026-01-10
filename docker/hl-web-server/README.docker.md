@@ -16,6 +16,7 @@ Repository: [github.com/yohimik/webxash3d-fwgs/docker/hl-web-server](https://git
 - ✅ AMX Mod X & Metamod-R compatible
 - ✅ Dockerized & easy to deploy
 - ✅ i386 (32-bit) architecture support
+- ✅ Optional Admin Panel for remote server management
 
 ---
 
@@ -95,6 +96,12 @@ To include custom content:
 
 * Mount a volume to `/xashds` inside the container
 * Or copy files into the Docker build context
+
+## 🔐 Admin Panel
+
+This image includes an optional **Admin Panel** for remote administration.
+
+For information on how to enable and use the Admin Panel, see the [CS Web Server Admin Panel documentation](https://github.com/yohimik/webxash3d-fwgs/tree/main/docker/cs-web-server#-admin-panel).
 
 ## 🌐 Discord Community
 
