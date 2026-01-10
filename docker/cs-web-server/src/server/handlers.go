@@ -120,7 +120,7 @@ func ExecuteCommand(command string) {
 func adminHandler(w http.ResponseWriter, r *http.Request) {
 	// Check if admin panel is enabled
 	if adminPassword == "" || adminUsername == "" {
-		http.Error(w, "Admin panel is disabled (ADMIN_USERNAME and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
+		http.Error(w, "Admin panel is disabled (ADMIN_PANEL_USER and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
 		return
 	}
 
@@ -137,7 +137,7 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 func logsWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	// Check if admin panel is enabled
 	if adminPassword == "" || adminUsername == "" {
-		http.Error(w, "Log streaming is disabled (ADMIN_USERNAME and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
+		http.Error(w, "Log streaming is disabled (ADMIN_PANEL_USER and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
 		return
 	}
 

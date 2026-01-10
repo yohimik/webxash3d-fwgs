@@ -26,10 +26,10 @@ func init() {
 	}
 
 	// Load admin credentials
-	adminUsername = os.Getenv("ADMIN_USERNAME")
+	adminUsername = os.Getenv("ADMIN_PANEL_USER")
 	if adminUsername == "" {
 		adminUsername = "admin"
-		log.Warnf("ADMIN_USERNAME not set, using default: 'admin'")
+		log.Warnf("ADMIN_PANEL_USER not set, using default: 'admin'")
 	}
 
 	adminPassword = os.Getenv("ADMIN_PANEL_PASSWORD")

@@ -110,7 +110,7 @@ func extractToken(r *http.Request) string {
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	// Check if admin panel is enabled
 	if adminPassword == "" || adminUsername == "" {
-		http.Error(w, "Admin panel is disabled (ADMIN_USERNAME and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
+		http.Error(w, "Admin panel is disabled (ADMIN_PANEL_USER and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
 		return
 	}
 
@@ -167,7 +167,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 func saltHandler(w http.ResponseWriter, r *http.Request) {
 	// Check if admin panel is enabled
 	if adminPassword == "" || adminUsername == "" {
-		http.Error(w, "Admin panel is disabled (ADMIN_USERNAME and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
+		http.Error(w, "Admin panel is disabled (ADMIN_PANEL_USER and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
 		return
 	}
 
@@ -189,7 +189,7 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Check if admin panel is enabled
 		if adminPassword == "" || adminUsername == "" {
-			http.Error(w, "Admin panel is disabled (ADMIN_USERNAME and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
+			http.Error(w, "Admin panel is disabled (ADMIN_PANEL_USER and ADMIN_PANEL_PASSWORD must be set)", http.StatusServiceUnavailable)
 			return
 		}
 
