@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"github.com/gorilla/websocket"
 	"github.com/jinzhu/configor"
 	"github.com/pion/ice/v4"
 	"github.com/pion/interceptor"
@@ -23,6 +24,37 @@ func init() {
 	if has {
 		xPoweredByValue = xPoweredValue
 	}
+
+	// Load admin credentials
+	adminUsername = os.Getenv("ADMIN_USERNAME")
+	if adminUsername == "" {
+		adminUsername = "admin"
+		log.Warnf("ADMIN_USERNAME not set, using default: 'admin'")
+	}
+
+	adminPassword = os.Getenv("ADMIN_PANEL_PASSWORD")
+	if adminPassword == "" {
+		log.Warnf("ADMIN_PANEL_PASSWORD not set, admin panel will be disabled")
+	} else {
+		// Generate JWT secret
+		generateJWTSecret()
+
+		// Generate password salt
+		generatePasswordSalt()
+
+		// Initialize rate limiters
+		loginRateLimiter = NewRateLimiter(5)  // 5 login attempts per minute
+		rconRateLimiter = NewRateLimiter(30)  // 30 RCON commands per minute
+		log.Infof("JWT authentication enabled for user: %s", adminUsername)
+	}
+
+	// Initialize log streaming
+	logBuffer = NewCircularBuffer(1000)
+	logClients = make(map[*websocket.Conn]chan string)
+	logBroadcast = make(chan string, 256)
+
+	// Start log broadcast goroutine
+	go logBroadcaster()
 
 	// Load engine configuration using configor
 	if err := configor.Load(&appConfig); err != nil {

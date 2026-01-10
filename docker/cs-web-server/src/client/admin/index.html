@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS Server Admin</title>
+    <link rel="stylesheet" href="cs16.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div id="auth-container">
+      <dialog class="cs-dialog panel-window auth-window" open>
+        <div class="heading">
+          <div class="wrapper">
+            <div class="icon" aria-hidden="true"></div>
+            <p class="text">Secure Access</p>
+          </div>
+          <div class="window-actions" aria-hidden="true">
+            <button
+              type="button"
+              class="cs-btn close"
+              onclick="location.href = '/index.html';"
+            ></button>
+          </div>
+        </div>
+        <div class="content auth-content">
+          <h1>CS Server Admin</h1>
+          <form id="auth-form">
+            <input
+              type="text"
+              id="username"
+              placeholder="Username"
+              required
+              autocomplete="username"
+              class="cs-input"
+            />
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+              autocomplete="current-password"
+              class="cs-input"
+            />
+            <button type="submit" id="login-btn" class="cs-btn">Login</button>
+          </form>
+          <div id="auth-error" class="error"></div>
+        </div>
+      </dialog>
+    </div>
+
+    <div id="admin-container" class="desktop" style="display: none">
+      <dialog class="cs-dialog panel-window admin-header" open>
+        <div class="heading">
+          <div class="wrapper">
+            <div class="icon" aria-hidden="true"></div>
+            <p class="text">Admin Session</p>
+          </div>
+          <div class="window-actions" aria-hidden="true">
+            <button
+              type="button"
+              class="cs-btn close"
+              onclick="location.href = '/index.html';"
+            ></button>
+          </div>
+        </div>
+        <div class="content admin-content">
+          <div class="session-copy">
+            <h1>CS Server Admin Panel</h1>
+            <p class="subtitle">Remote server controls</p>
+          </div>
+          <div class="header-controls">
+            <span id="username-display" class="username-info"></span>
+            <span id="token-expiry" class="token-info"></span>
+            <button id="disconnect-btn" class="cs-btn">Logout</button>
+          </div>
+        </div>
+      </dialog>
+
+      <div class="content-grid">
+        <dialog class="cs-dialog panel-window logs-window" open>
+          <div class="heading">
+            <div class="wrapper">
+              <div class="icon" aria-hidden="true"></div>
+              <p class="text">Server Console</p>
+            </div>
+            <div class="window-actions" aria-hidden="true">
+              <button
+                type="button"
+                class="cs-btn close"
+                onclick="location.href = '/index.html';"
+              ></button>
+            </div>
+          </div>
+          <div class="content">
+            <div class="section-header">
+              <h2>Server Logs</h2>
+              <div class="status">
+                <span id="connection-status" class="status-dot"></span>
+                <span id="connection-text">Connecting...</span>
+              </div>
+            </div>
+            <div id="logs-container"></div>
+            <form id="command-form">
+              <input
+                type="text"
+                id="command-input"
+                placeholder="changelevel cs_assault"
+                required
+                autocomplete="off"
+                class="cs-input"
+              />
+              <button type="submit" class="cs-btn">Execute</button>
+            </form>
+          </div>
+        </dialog>
+
+        <dialog class="cs-dialog panel-window command-window" open>
+          <div class="heading">
+            <div class="wrapper">
+              <div class="icon" aria-hidden="true"></div>
+              <p class="text">Command Center</p>
+            </div>
+            <div class="window-actions" aria-hidden="true">
+              <button
+                type="button"
+                class="cs-btn close"
+                onclick="location.href = '/index.html';"
+              ></button>
+            </div>
+          </div>
+          <div class="content">
+            <div class="cs-tabs">
+              <input
+                class="radiotab"
+                name="tabs"
+                tabindex="1"
+                type="radio"
+                id="tabone"
+                checked="checked"
+              />
+              <label class="label" for="tabone">Quick Commands</label>
+              <div class="panel" tabindex="1">
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="status"
+                >
+                  Status
+                </button>
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="sv_restartround 1"
+                >
+                  Restart Map
+                </button>
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="restart"
+                >
+                  Restart Server
+                </button>
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="kickall"
+                >
+                  Kick All Players
+                </button>
+              </div>
+              <input
+                class="radiotab"
+                tabindex="1"
+                name="tabs"
+                type="radio"
+                id="tabtwo"
+              />
+              <label class="label quick-cmd" for="tabtwo" data-cmd="maps *">Change Map</label>
+              <div class="panel" tabindex="1">
+                <select id="maps-select" class="cs-select" size="10" disabled>
+                  <option disabled>Run "maps *" to list available maps</option>
+                </select>
+                <button
+                  id="changelevel-btn"
+                  class="cs-btn cs-btn--primary"
+                  disabled
+                >
+                  Change to Selected Map
+                </button>
+              </div>
+              <input
+                class="radiotab"
+                tabindex="1"
+                name="tabs"
+                type="radio"
+                id="tabthree"
+              />
+              <label class="label" for="tabthree" id="game-settings-current"
+                >Settings</label
+              >
+              <div class="panel settings-panel" tabindex="1">
+                <form id="game-settings">
+                  <div class="settings-grid">
+                    <div class="row">
+                      <div class="col">Hostname</div>
+                      <div class="col">
+                        <input class="cs-input" name="hostname" type="input" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Max. players</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="maxplayers"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Time per map (minutes)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_timelimit"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Win limit (rounds)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_winlimit"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Round limit (rounds)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_maxrounds"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Time per round (minutes)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_roundtime"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Freeze time (seconds)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_freezetime"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Buy time (minutes)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_buytime"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Starting money</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_startmoney"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_footsteps"
+                            name="mp_footsteps"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_footsteps"
+                            >Footsteps</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Death camera type</div>
+                      <div class="col">
+                        <select class="cs-select" name="mp_forcecamera">
+                          <option value="0">Spectate anyone</option>
+                          <option value="1">Spectate team only</option>
+                          <option value="2">Only first-person</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_fadetoblack"
+                            name="mp_fadetoblack"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_fadetoblack"
+                            >Disable chase/death cam</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_friendlyfire"
+                            name="mp_friendlyfire"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_friendlyfire"
+                            >Friendly Fire</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_tkpunish"
+                            name="mp_tkpunish"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_tkpunish"
+                            >Kill TKers on next round</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_kickidlers"
+                            name="mp_autokick"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_kickidlers"
+                            >Kick idlers and TKers</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">Kick after (x) hostage kills</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_hostagepenalty"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_flashlight"
+                            name="mp_flashlight"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_flashlight"
+                            >Allow flashlight</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <button
+                    type="button"
+                    id="game-settings-current"
+                    class="cs-btn cs-btn--primary"
+                  >
+                    Current Settings
+                  </button> -->
+                  <button
+                    type="button"
+                    id="game-settings-apply"
+                    class="cs-btn cs-btn--primary"
+                  >
+                    Apply Settings
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

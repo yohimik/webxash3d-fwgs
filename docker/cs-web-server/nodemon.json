@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "watch": [
+    "src/client/**/*.ts"
+  ],
+  "exec": "sh b.sh",
+  "pollingInterval": 300,
+  "legacyWatch": true
+}
