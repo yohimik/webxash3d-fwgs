@@ -1,6 +1,7 @@
 import { uiManager } from "./ui";
 import { domManager } from "./dom";
 import { logger } from "./logger";
+import { i18n } from "./i18n";
 import type { TokenData, WebSocketMessage, DOMElements } from "./types";
 import { stripAnsiCodes } from "./utils";
 
@@ -39,7 +40,7 @@ class WebSocketManager {
     this.onLogoutCallback = onLogout;
 
     if (!tokenData) {
-      uiManager.addLog("System", "ERROR: No authentication token available");
+      uiManager.addLog("System", i18n.t("errors.noToken"));
       return;
     }
 
@@ -48,7 +49,7 @@ class WebSocketManager {
       window.location.host
     }/logs?token=${encodeURIComponent(tokenData.token)}`;
 
-    uiManager.updateConnectionStatus("connecting", "Connecting...");
+    uiManager.updateConnectionStatus("connecting", i18n.t("status.connecting"));
 
     this.ws = new WebSocket(wsUrl);
 
@@ -173,8 +174,8 @@ class WebSocketManager {
    */
   private handleOpen(): void {
     logger.info("WebSocket connected");
-    uiManager.updateConnectionStatus("connected", "Connected");
-    uiManager.addLog("System", "Connected to server logs");
+    uiManager.updateConnectionStatus("connected", i18n.t("status.connected"));
+    uiManager.addLog("System", i18n.t("logs.connectedToServer"));
   }
 
   /**
@@ -188,7 +189,7 @@ class WebSocketManager {
         uiManager.clearLogs();
         uiManager.addLog(
           "System",
-          `Loaded ${data.logs?.length || 0} historical entries`
+          i18n.t("logs.historyLoaded", { count: data.logs?.length || 0 })
         );
 
         data.logs?.forEach((log) => {
@@ -209,20 +210,20 @@ class WebSocketManager {
    */
   private handleError(error: Event): void {
     logger.error("WebSocket error:", error);
-    uiManager.updateConnectionStatus("disconnected", "Error");
+    uiManager.updateConnectionStatus("disconnected", i18n.t("status.error"));
   }
 
   /**
    * Handles WebSocket close event
    */
   private handleClose(event: CloseEvent): void {
-    uiManager.updateConnectionStatus("disconnected", "Disconnected");
+    uiManager.updateConnectionStatus("disconnected", i18n.t("status.disconnected"));
 
     // Check if it was an auth error
     if (event.code === 1008 || event.code === 4401) {
       uiManager.addLog(
         "System",
-        "Authentication failed - token may be expired"
+        i18n.t("errors.authFailed")
       );
       setTimeout(() => {
         if (this.onLogoutCallback) {
@@ -232,12 +233,12 @@ class WebSocketManager {
       return;
     }
 
-    uiManager.addLog("System", "Disconnected from server");
+    uiManager.addLog("System", i18n.t("logs.disconnected"));
 
     // Auto-reconnect after 3 seconds
     this.reconnectTimer = setTimeout(() => {
       if (this.currentTokenData) {
-        uiManager.addLog("System", "Reconnecting...");
+        uiManager.addLog("System", i18n.t("logs.reconnecting"));
         this.connect(this.currentTokenData!, this.onLogoutCallback!);
       }
     }, 3000) as unknown as number;

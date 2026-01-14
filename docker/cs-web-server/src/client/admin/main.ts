@@ -5,6 +5,7 @@ import { commandService } from "./commands";
 import { uiManager } from "./ui";
 import { apiClient } from "./api";
 import { logger } from "./logger";
+import { i18n } from "./i18n";
 import type { TokenData } from "./types";
 
 // ============================================
@@ -43,11 +44,15 @@ class AdminApp {
   async init(): Promise<void> {
     logger.info("Admin panel initializing...");
 
+    // Initialize i18n first
+    await i18n.init();
+
     // Prefetch salt (non-blocking)
     authService.prefetchSalt();
 
     // Setup UI
     uiManager.setupAutoScroll();
+    uiManager.setupLanguageSelector();
 
     // Setup event handlers
     authService.setupAuthHandler(this.handleLogin);

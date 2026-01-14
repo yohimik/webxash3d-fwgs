@@ -3,6 +3,7 @@ import { uiManager } from "./ui";
 import { webSocketManager } from "./websocket";
 import { getInputValue } from "./utils";
 import { apiClient } from "./api";
+import { i18n } from "./i18n";
 import type { TokenData, DOMElements } from "./types";
 
 // ============================================
@@ -42,7 +43,7 @@ class CommandService {
    */
   async sendCommand(command: string): Promise<void> {
     if (!this.currentTokenData) {
-      uiManager.addLog("System", "ERROR: Not authenticated");
+      uiManager.addLog("System", i18n.t("errors.notAuthenticated"));
       return;
     }
 
@@ -54,7 +55,7 @@ class CommandService {
       if (response.status === 401) {
         uiManager.addLog(
           "System",
-          "ERROR: Authentication failed - token expired"
+          i18n.t("errors.authFailed")
         );
         setTimeout(() => {
           if (this.onLogoutCallback) {
@@ -65,14 +66,14 @@ class CommandService {
       }
 
       if (response.status === 403) {
-        uiManager.addLog("System", "ERROR: Insufficient permissions");
+        uiManager.addLog("System", i18n.t("errors.insufficientPermissions"));
         return;
       }
 
       if (response.status === 429) {
         uiManager.addLog(
           "System",
-          "ERROR: Rate limit exceeded - please slow down"
+          i18n.t("errors.rateLimitExceeded")
         );
         return;
       }
@@ -80,7 +81,7 @@ class CommandService {
       if (!response.ok) {
         uiManager.addLog(
           "System",
-          `ERROR: Failed to execute command (${response.status})`
+          i18n.t("errors.commandFailed", { status: response.status })
         );
         return;
       }
@@ -133,7 +134,7 @@ class CommandService {
       });
 
       if (response.status !== 204) {
-        uiManager.addLog("System", "Failed to get current settings");
+        uiManager.addLog("System", i18n.t("errors.failedToGetSettings"));
         if (this.settingsTimeout) {
           clearTimeout(this.settingsTimeout);
         }
@@ -158,7 +159,7 @@ class CommandService {
    */
   private handleSettingsTimeout(): void {
     if (this.receivedSettings.size === 0) {
-      uiManager.addLog("System", "Timeout: No settings received from server");
+      uiManager.addLog("System", i18n.t("errors.settingsTimeout"));
       uiManager.showSettingsRefreshButton();
     } else {
       this.finalizeSettingsFetch();
@@ -197,7 +198,7 @@ class CommandService {
     uiManager.showSettingsForm();
     uiManager.addLog(
       "System",
-      `Loaded ${this.receivedSettings.size} setting(s)`
+      i18n.t("settings.loaded", { count: this.receivedSettings.size })
     );
   }
 
@@ -225,9 +226,9 @@ class CommandService {
     }
 
     if (changedCount === 0) {
-      uiManager.addLog("System", "No settings changed");
+      uiManager.addLog("System", i18n.t("settings.noChanges"));
     } else {
-      uiManager.addLog("System", `Applied ${changedCount} setting(s)`);
+      uiManager.addLog("System", i18n.t("settings.applied", { count: changedCount }));
     }
   }
 

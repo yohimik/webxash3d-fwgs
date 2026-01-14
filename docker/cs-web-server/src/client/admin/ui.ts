@@ -1,5 +1,6 @@
 import { domManager } from "./dom";
 import { escapeHtml, stripAnsiCodes, extractTimestamp } from "./utils";
+import { i18n, type Locale } from "./i18n";
 import type { ConnectionStatus, TokenData, DOMElements } from "./types";
 
 // ============================================
@@ -63,7 +64,9 @@ class UIManager {
    */
   setLoginButtonState(loading: boolean): void {
     this.el.loginBtn.disabled = loading;
-    this.el.loginBtn.textContent = loading ? "Logging in..." : "Login";
+    this.el.loginBtn.textContent = loading
+      ? i18n.t("auth.loggingIn")
+      : i18n.t("auth.login");
   }
 
   // ============================================
@@ -259,6 +262,53 @@ class UIManager {
   showAllSettingRows(): void {
     const rows = document.querySelectorAll("#game-settings .row");
     rows.forEach((row) => row.classList.remove("hidden"));
+  }
+
+  // ============================================
+  // Language Selector
+  // ============================================
+
+  /**
+   * Sets up language selector
+   */
+  setupLanguageSelector(): void {
+    const selectorAuth = document.getElementById(
+      "language-selector-auth"
+    ) as HTMLSelectElement | null;
+    const selectorAdmin = document.getElementById(
+      "language-selector-admin"
+    ) as HTMLSelectElement | null;
+
+    const selectors = [selectorAuth, selectorAdmin].filter(
+      (s) => s !== null
+    ) as HTMLSelectElement[];
+
+    if (selectors.length === 0) return;
+
+    // Generate options HTML
+    const optionsHTML = i18n.availableLocales
+      .map(
+        (locale) =>
+          `<option value="${locale}" ${locale === i18n.getLocale() ? "selected" : ""}>${i18n.localeNames[locale]}</option>`
+      )
+      .join("");
+
+    // Populate all selectors
+    selectors.forEach((selector) => {
+      selector.innerHTML = optionsHTML;
+
+      // Handle change
+      selector.addEventListener("change", async () => {
+        await i18n.setLocale(selector.value as Locale);
+        
+        // Sync all selectors
+        selectors.forEach((s) => {
+          if (s !== selector) {
+            s.value = selector.value;
+          }
+        });
+      });
+    });
   }
 }
 

@@ -11,4 +11,5 @@ export default defineConfig({
         }
     },
     root: 'src/client',
+    publicDir: 'public',
 });

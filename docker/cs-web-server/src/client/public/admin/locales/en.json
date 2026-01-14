@@ -1,0 +1,106 @@
+{
+  "app": {
+    "title": "Admin Panel",
+    "serverAdminPanel": "Server Admin Panel",
+    "remoteControls": "Remote server controls"
+  },
+  "auth": {
+    "secureAccess": "Secure Access",
+    "username": "Username",
+    "password": "Password",
+    "login": "Login",
+    "logout": "Logout",
+    "loggingIn": "Logging in..."
+  },
+  "session": {
+    "adminSession": "Admin Session",
+    "tokenExpiry": "Token expires in {minutes}m"
+  },
+  "console": {
+    "serverConsole": "Server Console",
+    "serverLogs": "Server Logs",
+    "commandPlaceholder": "changelevel cs_assault",
+    "execute": "Execute"
+  },
+  "status": {
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting...",
+    "error": "Error"
+  },
+  "commands": {
+    "commandCenter": "Command Center",
+    "quickCommands": "Quick Commands",
+    "status": "Status",
+    "restartMap": "Restart Map",
+    "restartServer": "Restart Server",
+    "kickAllPlayers": "Kick All Players"
+  },
+  "maps": {
+    "changeMap": "Change Map",
+    "selectMapHint": "Run \"maps *\" to list available maps",
+    "changeToSelected": "Change to Selected Map"
+  },
+  "settings": {
+    "title": "Settings",
+    "fetchingSettings": "Fetching settings...",
+    "reloadPage": "Reload Page",
+    "applySettings": "Apply Settings",
+    "noChanges": "No settings changed",
+    "applied": "Applied {count} setting(s)",
+    "loaded": "Loaded {count} setting(s)",
+    "hostname": "Hostname",
+    "maxPlayers": "Max. players",
+    "rconPassword": "RCON Password",
+    "validTeams": "Valid teams (blank for all)",
+    "fragLimit": "Frag Limit",
+    "timePerMap": "Time per map (minutes)",
+    "winLimit": "Win limit (rounds)",
+    "roundLimit": "Round limit (rounds)",
+    "timePerRound": "Time per round (minutes)",
+    "freezeTime": "Freeze time (seconds)",
+    "buyTime": "Buy time (minutes)",
+    "startingMoney": "Starting money",
+    "fallingDamage": "Falling Damage",
+    "fallingDamageNormal": "Normal",
+    "fallingDamageRealistic": "Realistic",
+    "teamplay": "Teamplay",
+    "footsteps": "Footsteps",
+    "weaponStay": "Weapon Stay",
+    "forceRespawn": "Force Respawn",
+    "deathCameraType": "Death camera type",
+    "spectateAnyone": "Spectate anyone",
+    "spectateTeamOnly": "Spectate team only",
+    "onlyFirstPerson": "Only first-person",
+    "disableChaseCam": "Disable chase/death cam",
+    "friendlyFire": "Friendly Fire",
+    "killTKers": "Kill TKers on next round",
+    "kickIdlers": "Kick idlers and TKers",
+    "hostageKillsKick": "Kick after (x) hostage kills",
+    "allowFlashlight": "Allow flashlight",
+    "autocrosshair": "Autocrosshair"
+  },
+  "errors": {
+    "notAuthenticated": "ERROR: Not authenticated",
+    "authFailed": "ERROR: Authentication failed - token expired",
+    "insufficientPermissions": "ERROR: Insufficient permissions",
+    "rateLimitExceeded": "ERROR: Rate limit exceeded - please slow down",
+    "commandFailed": "ERROR: Failed to execute command ({status})",
+    "failedToGetSettings": "Failed to get current settings",
+    "settingsTimeout": "Timeout: No settings received from server",
+    "invalidCredentials": "Invalid username or password",
+    "tooManyAttempts": "Too many attempts. Please try again later.",
+    "adminDisabled": "Admin panel is disabled on server",
+    "loginFailed": "Login failed. Please try again.",
+    "invalidToken": "Invalid token received",
+    "failedToFetchSalt": "Failed to fetch salt",
+    "noToken": "ERROR: No authentication token available"
+  },
+  "logs": {
+    "connectedToServer": "Connected to server logs",
+    "historyLoaded": "Loaded {count} historical entries",
+    "disconnected": "Disconnected from server",
+    "reconnecting": "Reconnecting..."
+  }
+}

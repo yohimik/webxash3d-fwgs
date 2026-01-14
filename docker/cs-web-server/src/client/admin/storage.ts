@@ -9,6 +9,7 @@ class StorageManager {
     TOKEN: "adminToken",
     EXPIRY: "adminTokenExpiry",
     USERNAME: "adminUsername",
+    LOCALE: "adminLocale",
   } as const;
 
   /**
@@ -49,6 +50,20 @@ class StorageManager {
     localStorage.removeItem(this.KEYS.TOKEN);
     localStorage.removeItem(this.KEYS.EXPIRY);
     localStorage.removeItem(this.KEYS.USERNAME);
+  }
+
+  /**
+   * Gets saved locale
+   */
+  getLocale(): string | null {
+    return localStorage.getItem(this.KEYS.LOCALE);
+  }
+
+  /**
+   * Saves locale preference
+   */
+  setLocale(locale: string): void {
+    localStorage.setItem(this.KEYS.LOCALE, locale);
   }
 }
 

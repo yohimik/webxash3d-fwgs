@@ -4,6 +4,7 @@ import { storageManager } from "./storage";
 import { uiManager } from "./ui";
 import { logger } from "./logger";
 import { apiClient } from "./api";
+import { i18n } from "./i18n";
 import type { TokenData, DOMElements } from "./types";
 
 // ============================================
@@ -45,11 +46,11 @@ class AuthService {
     const response = await apiClient.get<SaltResponse>("/auth/salt", false);
 
     if (response.status === 503) {
-      throw new Error("Admin panel is disabled");
+      throw new Error(i18n.t("errors.adminDisabled"));
     }
 
     if (!response.ok || !response.data) {
-      throw new Error("Failed to fetch salt");
+      throw new Error(i18n.t("errors.failedToFetchSalt"));
     }
 
     return response.data.salt;
@@ -92,25 +93,25 @@ class AuthService {
       );
 
       if (response.status === 401) {
-        throw new Error("Invalid username or password");
+        throw new Error(i18n.t("errors.invalidCredentials"));
       }
 
       if (response.status === 429) {
-        throw new Error("Too many attempts. Please try again later.");
+        throw new Error(i18n.t("errors.tooManyAttempts"));
       }
 
       if (response.status === 503) {
-        throw new Error("Admin panel is disabled on server");
+        throw new Error(i18n.t("errors.adminDisabled"));
       }
 
       if (!response.ok || !response.data) {
-        throw new Error("Login failed. Please try again.");
+        throw new Error(i18n.t("errors.loginFailed"));
       }
 
       // Decode token to extract username
       const payload = decodeJWT(response.data.token);
       if (!payload || !payload.username) {
-        throw new Error("Invalid token received");
+        throw new Error(i18n.t("errors.invalidToken"));
       }
 
       // Create token data

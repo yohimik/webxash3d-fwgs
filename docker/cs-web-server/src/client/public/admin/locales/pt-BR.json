@@ -1,0 +1,106 @@
+{
+  "app": {
+    "title": "Painel Admin",
+    "serverAdminPanel": "Painel Admin do Servidor",
+    "remoteControls": "Controles remotos do servidor"
+  },
+  "auth": {
+    "secureAccess": "Acesso Seguro",
+    "username": "Usuário",
+    "password": "Senha",
+    "login": "Entrar",
+    "logout": "Sair",
+    "loggingIn": "Entrando..."
+  },
+  "session": {
+    "adminSession": "Sessão Admin",
+    "tokenExpiry": "Token expira em {minutes}m"
+  },
+  "console": {
+    "serverConsole": "Console do Servidor",
+    "serverLogs": "Logs do Servidor",
+    "commandPlaceholder": "changelevel cs_assault",
+    "execute": "Executar"
+  },
+  "status": {
+    "connecting": "Conectando...",
+    "connected": "Conectado",
+    "disconnected": "Desconectado",
+    "reconnecting": "Reconectando...",
+    "error": "Erro"
+  },
+  "commands": {
+    "commandCenter": "Central de Comandos",
+    "quickCommands": "Comandos Rápidos",
+    "status": "Status",
+    "restartMap": "Reiniciar Mapa",
+    "restartServer": "Reiniciar Servidor",
+    "kickAllPlayers": "Expulsar Todos"
+  },
+  "maps": {
+    "changeMap": "Trocar Mapa",
+    "selectMapHint": "Execute \"maps *\" para listar mapas disponíveis",
+    "changeToSelected": "Trocar para Mapa Selecionado"
+  },
+  "settings": {
+    "title": "Configurações",
+    "fetchingSettings": "Buscando configurações...",
+    "reloadPage": "Recarregar Página",
+    "applySettings": "Aplicar Configurações",
+    "noChanges": "Nenhuma configuração alterada",
+    "applied": "{count} configuração(ões) aplicada(s)",
+    "loaded": "{count} configuração(ões) carregada(s)",
+    "hostname": "Nome do Servidor",
+    "maxPlayers": "Máx. jogadores",
+    "rconPassword": "Senha RCON",
+    "validTeams": "Times válidos (vazio para todos)",
+    "fragLimit": "Limite de Frags",
+    "timePerMap": "Tempo por mapa (minutos)",
+    "winLimit": "Limite de vitórias (rodadas)",
+    "roundLimit": "Limite de rodadas",
+    "timePerRound": "Tempo por rodada (minutos)",
+    "freezeTime": "Tempo de congelamento (segundos)",
+    "buyTime": "Tempo de compra (minutos)",
+    "startingMoney": "Dinheiro inicial",
+    "fallingDamage": "Dano de Queda",
+    "fallingDamageNormal": "Normal",
+    "fallingDamageRealistic": "Realista",
+    "teamplay": "Jogo em Equipe",
+    "footsteps": "Passos",
+    "weaponStay": "Armas Permanecem",
+    "forceRespawn": "Respawn Forçado",
+    "deathCameraType": "Tipo de câmera de morte",
+    "spectateAnyone": "Observar qualquer um",
+    "spectateTeamOnly": "Observar só o time",
+    "onlyFirstPerson": "Só primeira pessoa",
+    "disableChaseCam": "Desativar câmera de morte",
+    "friendlyFire": "Fogo Amigo",
+    "killTKers": "Matar TKers na próxima rodada",
+    "kickIdlers": "Expulsar inativos e TKers",
+    "hostageKillsKick": "Expulsar após (x) reféns mortos",
+    "allowFlashlight": "Permitir lanterna",
+    "autocrosshair": "Mira automática"
+  },
+  "errors": {
+    "notAuthenticated": "ERRO: Não autenticado",
+    "authFailed": "ERRO: Autenticação falhou - token expirado",
+    "insufficientPermissions": "ERRO: Permissões insuficientes",
+    "rateLimitExceeded": "ERRO: Limite de requisições excedido - aguarde",
+    "commandFailed": "ERRO: Falha ao executar comando ({status})",
+    "failedToGetSettings": "Falha ao obter configurações atuais",
+    "settingsTimeout": "Tempo esgotado: Nenhuma configuração recebida do servidor",
+    "invalidCredentials": "Usuário ou senha inválidos",
+    "tooManyAttempts": "Muitas tentativas. Tente novamente mais tarde.",
+    "adminDisabled": "Painel admin desativado no servidor",
+    "loginFailed": "Falha no login. Tente novamente.",
+    "invalidToken": "Token inválido recebido",
+    "failedToFetchSalt": "Falha ao buscar salt",
+    "noToken": "ERRO: Nenhum token de autenticação disponível"
+  },
+  "logs": {
+    "connectedToServer": "Conectado aos logs do servidor",
+    "historyLoaded": "{count} entrada(s) de histórico carregada(s)",
+    "disconnected": "Desconectado do servidor",
+    "reconnecting": "Reconectando..."
+  }
+}
