@@ -15,6 +15,7 @@ Repository: [github.com/yohimik/webxash3d-fwgs/docker/cs-web-server](https://git
 - ✅ AMX Mod X & Metamod-R compatible
 - ✅ Dockerized & easy to deploy
 - ✅ i386 (32-bit) architecture support
+- ✅ Optional Admin Panel for remote server management
 
 ---
 
@@ -95,12 +96,15 @@ Then open `http://<your-server-ip>:27016` in your browser!
 
 ### Server Configuration
 
-| Variable               | Description                                            | Example             |
-|------------------------|--------------------------------------------------------|---------------------|
-| `IP`                   | Public IP address for WebRTC connection                | `123.45.67.89`      |
-| `PORT`                 | UDP port for CS server (must be open)                  | `27018`             |
-| `DISABLE_X_POWERED_BY` | Set to `true` to remove the `X-Powered-By` HTTP header | `true`              |
-| `X_POWERED_BY_VALUE`   | Custom value for `X-Powered-By` header if not disabled | `CS 1.6 Web Server` |
+| Variable               | Description                                                               | Example                  |
+|------------------------|---------------------------------------------------------------------------|--------------------------|
+| `IP`                   | Public IP address for WebRTC connection                                   | `123.45.67.89`           |
+| `PORT`                 | UDP port for CS server (must be open)                                     | `27018`                  |
+| `DISABLE_X_POWERED_BY` | Set to `true` to remove the `X-Powered-By` HTTP header                    | `true`                   |
+| `X_POWERED_BY_VALUE`   | Custom value for `X-Powered-By` header if not disabled                    | `CS 1.6 Web Server`.     |
+| `ADMIN_PANEL_USER`     | Username for [Admin Panel](#-admin-panel) access (leave empty to disable) | `admin`                  |
+| `ADMIN_PANEL_PASSWORD` | Password for [Admin Panel](#-admin-panel) access (leave empty to disable) | `<strong_password>`      |
+| `ADMIN_LOG_LEVEL`      | Log level for Admin Panel console (`debug`, `info`, `warn`, `error`, `silent`) | `info`               |
 
 ### Engine Configuration
 
@@ -130,6 +134,21 @@ To include custom plugins:
 
 * Mount a volume to `/xashds` inside the container
 * Or copy plugin files into the Docker build context
+
+## 🔐 Admin Panel
+
+This image includes an optional **Admin Panel** for remote administration (RCON, live logs). Enable it by setting the following environment variables in your Docker run or compose configuration:
+
+```yaml
+environment:
+  ADMIN_PANEL_USER: "admin"
+  ADMIN_PANEL_PASSWORD: "<strong_password>"
+  ADMIN_LOG_LEVEL: "info"  # optional: debug, info, warn, error, silent
+```
+
+Access the admin panel at `http://<your-public-ip>:<your-port>/admin`.
+
+Security recommendations: use a strong password, restrict access via a reverse proxy with TLS, and do not expose the admin panel publicly without proper protections.
 
 ## 🌐 Discord Community
 

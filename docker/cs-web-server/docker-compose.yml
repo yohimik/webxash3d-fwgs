@@ -12,6 +12,8 @@ services:
     environment:
       PORT: 27018
       IP: 192.168.50.123
+      ADMIN_PANEL_USER: "admin"
+      ADMIN_PANEL_PASSWORD: "my_secret_password"
     volumes:
       - "./valve.zip:/xashds/public/valve.zip"
     ports:
