@@ -1,5 +1,13 @@
 import {Net, Packet, Xash3D, Xash3DOptions} from "xash3d-fwgs";
 
+// WebSocket event version constants
+const EVENT_VERSION = 'v1';
+const EVENTS = {
+    OFFER: `${EVENT_VERSION}:offer`,
+    ANSWER: `${EVENT_VERSION}:answer`,
+    CANDIDATE: `${EVENT_VERSION}:candidate`,
+} as const;
+
 export class Xash3DWebRTC extends Xash3D {
     private channel?: RTCDataChannel
     private resolve?: (value?: unknown) => void
@@ -29,7 +37,7 @@ export class Xash3DWebRTC extends Xash3D {
             if (!e.candidate) {
                 return
             }
-            this.wsSend('candidate', e.candidate.toJSON())
+            this.wsSend(EVENTS.CANDIDATE, e.candidate.toJSON())
         }
         let el: HTMLAudioElement | undefined
         this.peer.ontrack = (e) => {
@@ -126,7 +134,7 @@ export class Xash3DWebRTC extends Xash3D {
         this.remoteDescription = undefined
         const answer = await this.peer!.createAnswer()
         await this.peer!.setLocalDescription(answer)
-        this.wsSend('answer', answer)
+        this.wsSend(EVENTS.ANSWER, answer)
         this.wasRemote = true
         this.handleCandidates()
     }
@@ -152,11 +160,11 @@ export class Xash3DWebRTC extends Xash3D {
         const handler = async (e: MessageEvent) => {
             const parsed = JSON.parse(e.data)
             switch (parsed.event) {
-                case 'offer':
+                case EVENTS.OFFER:
                     this.remoteDescription = parsed.data
                     await this.handleDescription()
                     break
-                case 'candidate':
+                case EVENTS.CANDIDATE:
                     this.candidates.push(parsed.data)
                     if (this.wasRemote) {
                         this.handleCandidates()

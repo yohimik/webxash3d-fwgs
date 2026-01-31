@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="cs16.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div id="auth-container">
+      <dialog class="cs-dialog panel-window auth-window" open>
+        <div class="heading">
+          <div class="wrapper">
+            <div class="icon" aria-hidden="true"></div>
+            <p class="text" data-i18n="auth.secureAccess">Secure Access</p>
+          </div>
+          <div class="window-actions" aria-hidden="true">
+            <button
+              type="button"
+              class="cs-btn close"
+              onclick="location.href = '/index.html';"
+            ></button>
+          </div>
+        </div>
+        <div class="content auth-content">
+          <h1 data-i18n="app.serverAdminPanel">Server Admin Panel</h1>
+          <form id="auth-form">
+            <input
+              type="text"
+              id="username"
+              data-i18n-placeholder="auth.username"
+              placeholder="Username"
+              required
+              autocomplete="username"
+              class="cs-input"
+            />
+            <input
+              type="password"
+              id="password"
+              data-i18n-placeholder="auth.password"
+              placeholder="Password"
+              required
+              autocomplete="current-password"
+              class="cs-input"
+            />
+            <button type="submit" id="login-btn" class="cs-btn" data-i18n="auth.login">Login</button>
+          </form>
+          <div id="auth-error" class="error"></div>
+      </div>
+    </dialog>
+    <div class="language-selector-container auth-page">
+      <select id="language-selector-auth" class="cs-select language-selector"></select>
+    </div>
+  </div>
+
+  <div id="admin-container" class="desktop" style="display: none">
+    <dialog class="cs-dialog panel-window admin-header" open>
+      <div class="heading">
+        <div class="wrapper">
+          <div class="icon" aria-hidden="true"></div>
+          <p class="text" data-i18n="session.adminSession">Admin Session</p>
+        </div>
+        <div class="window-actions" aria-hidden="true">
+          <button
+            type="button"
+            class="cs-btn close"
+              onclick="location.href = '/index.html';"
+            ></button>
+          </div>
+        </div>
+        <div class="content admin-content">
+          <div class="session-copy">
+            <h1 data-i18n="app.serverAdminPanel">Server Admin Panel</h1>
+            <p class="subtitle" data-i18n="app.remoteControls">Remote server controls</p>
+          </div>
+          <div class="header-controls">
+            <span id="username-display" class="username-info"></span>
+            <span id="token-expiry" class="token-info"></span>
+            <select id="language-selector-admin" class="cs-select language-selector"></select>
+            <button id="disconnect-btn" class="cs-btn" data-i18n="auth.logout">Logout</button>
+          </div>
+        </div>
+      </dialog>
+
+      <div class="content-grid">
+        <dialog class="cs-dialog panel-window logs-window" open>
+          <div class="heading">
+            <div class="wrapper">
+              <div class="icon" aria-hidden="true"></div>
+              <p class="text" data-i18n="console.serverConsole">Server Console</p>
+            </div>
+            <div class="window-actions" aria-hidden="true">
+              <button
+                type="button"
+                class="cs-btn close"
+                onclick="location.href = '/index.html';"
+              ></button>
+            </div>
+          </div>
+          <div class="content">
+            <div class="section-header">
+              <h2 data-i18n="console.serverLogs">Server Logs</h2>
+              <div class="status">
+                <span id="connection-status" class="status-dot"></span>
+                <span id="connection-text" data-i18n="status.connecting">Connecting...</span>
+              </div>
+            </div>
+            <div id="logs-container"></div>
+            <form id="command-form">
+              <input
+                type="text"
+                id="command-input"
+                data-i18n-placeholder="console.commandPlaceholder"
+                placeholder="changelevel cs_assault"
+                required
+                autocomplete="off"
+                class="cs-input"
+              />
+              <button type="submit" class="cs-btn" data-i18n="console.execute">Execute</button>
+            </form>
+          </div>
+        </dialog>
+
+        <dialog class="cs-dialog panel-window command-window" open>
+          <div class="heading">
+            <div class="wrapper">
+              <div class="icon" aria-hidden="true"></div>
+              <p class="text" data-i18n="commands.commandCenter">Command Center</p>
+            </div>
+            <div class="window-actions" aria-hidden="true">
+              <button
+                type="button"
+                class="cs-btn close"
+                onclick="location.href = '/index.html';"
+              ></button>
+            </div>
+          </div>
+          <div class="content">
+            <div class="cs-tabs">
+              <input
+                class="radiotab"
+                name="tabs"
+                tabindex="1"
+                type="radio"
+                id="tabone"
+                checked="checked"
+              />
+              <label class="label" for="tabone" data-i18n="commands.quickCommands">Quick Commands</label>
+              <div class="panel" tabindex="1">
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="status"
+                  data-i18n="commands.status"
+                >
+                  Status
+                </button>
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="sv_restartround 1"
+                  data-i18n="commands.restartMap"
+                >
+                  Restart Map
+                </button>
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="restart"
+                  data-i18n="commands.restartServer"
+                >
+                  Restart Server
+                </button>
+                <button
+                  class="cs-btn cs-btn--primary quick-cmd"
+                  data-cmd="kickall"
+                  data-i18n="commands.kickAllPlayers"
+                >
+                  Kick All Players
+                </button>
+              </div>
+              <input
+                class="radiotab"
+                tabindex="1"
+                name="tabs"
+                type="radio"
+                id="tabtwo"
+              />
+              <label class="label quick-cmd" for="tabtwo" data-cmd="maps *" data-i18n="maps.changeMap"
+                >Change Map</label
+              >
+              <div class="panel" tabindex="1">
+                <select id="maps-select" class="cs-select" size="10" disabled>
+                  <option disabled data-i18n="maps.selectMapHint">Run "maps *" to list available maps</option>
+                </select>
+                <button
+                  id="changelevel-btn"
+                  class="cs-btn cs-btn--primary"
+                  disabled
+                  data-i18n="maps.changeToSelected"
+                >
+                  Change to Selected Map
+                </button>
+              </div>
+              <input
+                class="radiotab"
+                tabindex="1"
+                name="tabs"
+                type="radio"
+                id="tabthree"
+              />
+              <label class="label" for="tabthree" id="game-settings-current" data-i18n="settings.title"
+                >Settings</label
+              >
+              <div class="panel settings-panel" tabindex="1">
+                <!-- Área de loading/status -->
+                <div
+                  id="settings-status"
+                  class="settings-status"
+                  style="display: none; padding: 20px; text-align: center"
+                >
+                  <p
+                    id="settings-status-text"
+                    style="margin-bottom: 15px; color: var(--accent)"
+                    data-i18n="settings.fetchingSettings"
+                  >
+                    Fetching settings...
+                  </p>
+                  <button
+                    id="settings-refresh-btn"
+                    class="cs-btn cs-btn--primary"
+                    style="display: none"
+                    data-i18n="settings.reloadPage"
+                  >
+                    Reload Page
+                  </button>
+                </div>
+
+                <form id="game-settings">
+                  <div class="settings-grid">
+                    <div class="row">
+                      <div class="col" data-i18n="settings.hostname">Hostname</div>
+                      <div class="col">
+                        <input class="cs-input" name="hostname" type="input" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.maxPlayers">Max. players</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="maxplayers"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.rconPassword">RCON Password</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="rcon_password"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.validTeams">Valid teams (blank for all)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_teamlist"
+                          type="input"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.fragLimit">Frag Limit</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_fraglimit"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.timePerMap">Time per map (minutes)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_timelimit"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.winLimit">Win limit (rounds)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_winlimit"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.roundLimit">Round limit (rounds)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_maxrounds"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.timePerRound">Time per round (minutes)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_roundtime"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.freezeTime">Freeze time (seconds)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_freezetime"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.buyTime">Buy time (minutes)</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_buytime"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.startingMoney">Starting money</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_startmoney"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.fallingDamage">Falling Damage</div>
+                      <div class="col">
+                        <select class="cs-select" name="mp_forcecamera">
+                          <option value="0" data-i18n="settings.fallingDamageNormal">Normal</option>
+                          <option value="1" data-i18n="settings.fallingDamageRealistic">Realistic</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_teamplay"
+                            name="mp_teamplay"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_teamplay" data-i18n="settings.teamplay"
+                            >Teamplay</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_footsteps"
+                            name="mp_footsteps"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_footsteps" data-i18n="settings.footsteps"
+                            >Footsteps</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_weaponstay"
+                            name="mp_weaponstay"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_weaponstay" data-i18n="settings.weaponStay"
+                            >Weapon Stay</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_forcerespawn"
+                            name="mp_forcerespawn"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_forcerespawn" data-i18n="settings.forceRespawn"
+                            >Force Respawn</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.deathCameraType">Death camera type</div>
+                      <div class="col">
+                        <select class="cs-select" name="mp_forcecamera">
+                          <option value="0" data-i18n="settings.spectateAnyone">Spectate anyone</option>
+                          <option value="1" data-i18n="settings.spectateTeamOnly">Spectate team only</option>
+                          <option value="2" data-i18n="settings.onlyFirstPerson">Only first-person</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_fadetoblack"
+                            name="mp_fadetoblack"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_fadetoblack" data-i18n="settings.disableChaseCam"
+                            >Disable chase/death cam</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_friendlyfire"
+                            name="mp_friendlyfire"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_friendlyfire" data-i18n="settings.friendlyFire"
+                            >Friendly Fire</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_tkpunish"
+                            name="mp_tkpunish"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_tkpunish" data-i18n="settings.killTKers"
+                            >Kill TKers on next round</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_kickidlers"
+                            name="mp_autokick"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_kickidlers" data-i18n="settings.kickIdlers"
+                            >Kick idlers and TKers</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col" data-i18n="settings.hostageKillsKick">Kick after (x) hostage kills</div>
+                      <div class="col">
+                        <input
+                          class="cs-input"
+                          name="mp_hostagepenalty"
+                          type="input"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_flashlight"
+                            name="mp_flashlight"
+                            type="checkbox"
+                          />
+                          <label class="cs-checkbox__label" for="s_flashlight" data-i18n="settings.allowFlashlight"
+                            >Allow flashlight</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row full-width">
+                      <div class="col">
+                        <div class="cs-checkbox">
+                          <input
+                            id="s_autocrosshair"
+                            name="mp_autocrosshair"
+                            type="checkbox"
+                          />
+                          <label
+                            class="cs-checkbox__label"
+                            for="s_autocrosshair"
+                            data-i18n="settings.autocrosshair"
+                            >Autocrosshair</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <button
+                    type="button"
+                    id="game-settings-current"
+                    class="cs-btn cs-btn--primary"
+                  >
+                    Current Settings
+                  </button> -->
+                  <button
+                    type="button"
+                    id="game-settings-apply"
+                    class="cs-btn cs-btn--primary"
+                    data-i18n="settings.applySettings"
+                  >
+                    Apply Settings
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

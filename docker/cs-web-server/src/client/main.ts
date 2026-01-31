@@ -46,7 +46,7 @@ async function fetchWithProgress(url: string) {
 
 async function main() {
     // Load dynamic configuration from server (environment variables)
-    const config = await fetch("/config").then(res => res.json()) as Awaited<{
+    const config = await fetch("/v1/config").then(res => res.json()) as Awaited<{
         arguments: string[];
         console: string[];
         game_dir: string;

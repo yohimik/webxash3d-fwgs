@@ -1,0 +1,446 @@
+/*
+ * Server Admin Panel - Custom Styles
+ * Base theme: cs16.css (https://github.com/ekmas/cs16.css)
+ * This file extends cs16.css with admin panel specific layouts and features
+  */
+
+/* Override cs16.css base font and sizes */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.cs-dialog .heading .wrapper .text,
+.cs-btn,
+.cs-tabs .label,
+.cs-input,
+.cs-select {
+  font-size: 12px;
+}
+
+:root {
+  /* Extended palette for admin panel */
+  --success: #27ae60;
+  --success-light: #2ecc71;
+  --error: #e74c3c;
+  --error-light: #ff8c82;
+  --warning: #f39c12;
+  --info: #3498db;
+
+  /* Semantic aliases */
+  --status-connected: var(--accent);
+  --status-disconnected: var(--error-light);
+  --status-connecting: var(--warning);
+  --token-valid: var(--success);
+  --token-expiring: var(--error);
+  --log-border: rgba(0, 0, 0, 0.1);
+
+  /* Overlay colors */
+  --overlay-scanline: rgba(0, 0, 0, 0.1);
+  --overlay-scanline-transparent: rgba(0, 0, 0, 0);
+}
+
+body {
+  min-height: 100vh;
+  padding: 32px;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url("../logo.png");
+  background-position: right 5% bottom 5%;
+  background-repeat: no-repeat;
+  background-size: 420px;
+  opacity: 0.08;
+  pointer-events: none;
+  content: "";
+}
+
+/* Scanline effect overlay */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background-image: repeating-linear-gradient(
+    180deg,
+    var(--overlay-scanline-transparent) 0,
+    var(--overlay-scanline-transparent) 2px,
+    var(--overlay-scanline) 2px,
+    var(--overlay-scanline) 4px
+  );
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Layout containers */
+#auth-container,
+.desktop {
+  position: relative;
+  z-index: 10;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+#auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+}
+
+.desktop {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 32px;
+}
+
+/* Panel windows (CS 1.6 dialog style) */
+.panel-window {
+  position: static;
+  inset: unset;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 4px;
+}
+
+.panel-window .heading .text {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.window-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.window-actions .cs-btn.close {
+  width: 18px;
+  height: 18px;
+}
+
+.panel-window .content {
+  padding: 10px;
+}
+
+/* Authentication window */
+.auth-window {
+  max-width: 400px;
+}
+
+.auth-window .content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+.auth-window h1 {
+  margin-bottom: 4px;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+#auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#auth-form .cs-input {
+  width: 100%;
+}
+
+#auth-form .cs-btn {
+  width: 100%;
+}
+
+.error {
+  min-height: 16px;
+  color: var(--error-light);
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+/* Admin header */
+.admin-header {
+  margin-bottom: 16px;
+}
+
+.admin-header h1 {
+  color: var(--text);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.admin-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 10px;
+}
+
+.session-copy .subtitle {
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.header-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.username-info,
+.token-info {
+  border: 1px solid;
+  border-color: var(--border-dark) var(--border-light) var(--border-light)
+    var(--border-dark);
+  padding: 4px 8px 3px;
+  background-color: var(--secondary-bg);
+  font-size: 11px;
+  letter-spacing: 1px;
+  line-height: 15px;
+}
+
+.token-info {
+  color: var(--accent);
+}
+
+/* Content grid layout */
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Server logs window */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.section-header h2,
+.command-window h2 {
+  color: var(--text-3);
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 15px;
+  text-transform: uppercase;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  line-height: 15px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid;
+  border-color: var(--border-dark) var(--border-light) var(--border-light)
+    var(--border-dark);
+  background: var(--text-3);
+}
+
+.status-dot.connected {
+  background: var(--status-connected);
+}
+
+.status-dot.disconnected {
+  background: var(--status-disconnected);
+}
+
+#logs-container {
+  height: 520px;
+  border: 1px solid;
+  border-color: var(--border-dark) var(--border-light) var(--border-light)
+    var(--border-dark);
+  padding: 8px;
+  background: var(--secondary-bg);
+  color: var(--secondary-text);
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-y: auto;
+}
+
+.log-entry {
+  border-bottom: 1px solid var(--log-border);
+  padding: 3px 0;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-timestamp {
+  margin-right: 6px;
+  color: var(--text-3);
+}
+
+/* Command center window */
+.command-window .content {
+  padding: 15px 10px;
+}
+
+#command-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+#command-form .cs-input {
+  flex: 1;
+}
+
+#command-form .cs-btn {
+  min-width: 100px;
+}
+
+.quick-commands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.quick-cmd {
+  justify-content: center;
+}
+
+/* Usar os estilos de scrollbar padrão do cs16.css */
+
+@media (max-width: 768px) {
+  body {
+    padding: 16px;
+  }
+
+  #command-form {
+    flex-direction: column;
+  }
+
+  #command-form .cs-btn {
+    width: 100%;
+  }
+}
+
+/* Settings Grid */
+.settings-panel {
+  padding: 8px !important;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 45%;
+  row-gap: 4px;
+  max-height: 504px;
+  margin-bottom: 8px;
+  border: 1px solid;
+  border-color: var(--border-dark) var(--border-light) var(--border-light)
+    var(--border-dark);
+  padding: 8px;
+  font-size: 14px;
+  overflow-y: auto;
+}
+
+.settings-grid .row {
+  display: contents;
+}
+
+.settings-grid .row.full-width {
+  display: block;
+  grid-column: 1 / -1;
+}
+
+.settings-grid .row.full-width .col {
+  display: inline-block;
+}
+
+.settings-grid .col {
+  align-self: center;
+  padding: 0;
+  font-size: 12px;
+  text-align: left;
+}
+
+.settings-grid input,
+.settings-grid select {
+  width: 100%;
+  min-width: unset;
+}
+
+#maps-select {
+  width: 100%;
+  height: 456px;
+  margin-bottom: 8px;
+}
+
+/* Settings Loading State */
+.settings-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.settings-status p {
+  letter-spacing: 1px;
+}
+
+/* Ocultar linhas de campos que não receberam dados */
+.settings-grid .row.hidden {
+  display: none !important;
+}
+
+/* Language Selector */
+.language-selector-container {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.language-selector-container.auth-page {
+  position: fixed;
+}
+
+.language-selector {
+  min-width: 180px;
+  padding: 4px 20px 4px 6px;
+  background-position: right 5px top 50%;
+  background-size: 6px auto;
+  font-size: 10px;
+}
+
+.language-selector option {
+  padding: 4px;
+}
+
+/* Admin header language selector */
+.header-controls .language-selector {
+  min-width: 150px;
+}

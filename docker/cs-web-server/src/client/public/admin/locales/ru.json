@@ -1,0 +1,108 @@
+{
+  "app": {
+    "title": "Панель Админа",
+    "serverAdminPanel": "Панель Администратора Сервера",
+    "remoteControls": "Удалённое управление сервером"
+  },
+  "auth": {
+    "secureAccess": "Безопасный Доступ",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "login": "Войти",
+    "logout": "Выйти",
+    "loggingIn": "Вход..."
+  },
+  "session": {
+    "adminSession": "Сессия Админа",
+    "tokenExpiry": "Токен истекает через {minutes}м"
+  },
+  "console": {
+    "serverConsole": "Консоль Сервера",
+    "serverLogs": "Логи Сервера",
+    "commandPlaceholder": "changelevel cs_assault",
+    "execute": "Выполнить"
+  },
+  "status": {
+    "connecting": "Подключение...",
+    "connected": "Подключено",
+    "disconnected": "Отключено",
+    "reconnecting": "Переподключение...",
+    "error": "Ошибка"
+  },
+  "commands": {
+    "commandCenter": "Центр Команд",
+    "quickCommands": "Быстрые Команды",
+    "status": "Статус",
+    "restartMap": "Перезапуск Карты",
+    "restartServer": "Перезапуск Сервера",
+    "kickAllPlayers": "Выгнать Всех Игроков"
+  },
+  "maps": {
+    "changeMap": "Сменить Карту",
+    "selectMapHint": "Выполните \"maps *\" для списка доступных карт",
+    "changeToSelected": "Сменить на Выбранную Карту"
+  },
+  "settings": {
+    "title": "Настройки",
+    "fetchingSettings": "Загрузка настроек...",
+    "reloadPage": "Перезагрузить Страницу",
+    "applySettings": "Применить Настройки",
+    "noChanges": "Настройки не изменены",
+    "applied": "Применено {count} настроек",
+    "loaded": "Загружено {count} настроек",
+    "hostname": "Имя Сервера",
+    "maxPlayers": "Макс. игроков",
+    "rconPassword": "Пароль RCON",
+    "validTeams": "Доступные команды (пусто для всех)",
+    "fragLimit": "Лимит Фрагов",
+    "timePerMap": "Время на карту (минуты)",
+    "winLimit": "Лимит побед (раунды)",
+    "roundLimit": "Лимит раундов",
+    "timePerRound": "Время раунда (минуты)",
+    "freezeTime": "Время заморозки (секунды)",
+    "buyTime": "Время покупки (минуты)",
+    "startingMoney": "Начальные деньги",
+    "fallingDamage": "Урон от Падения",
+    "fallingDamageNormal": "Обычный",
+    "fallingDamageRealistic": "Реалистичный",
+    "teamplay": "Командная Игра",
+    "footsteps": "Шаги",
+    "weaponStay": "Оружие Остаётся",
+    "forceRespawn": "Принудительный Респаун",
+    "deathCameraType": "Тип камеры смерти",
+    "spectateAnyone": "Наблюдать за всеми",
+    "spectateTeamOnly": "Наблюдать только за командой",
+    "onlyFirstPerson": "Только от первого лица",
+    "disableChaseCam": "Отключить камеру преследования",
+    "friendlyFire": "Огонь по Своим",
+    "killTKers": "Убить TKеров в следующем раунде",
+    "kickIdlers": "Выгонять бездельников и TKеров",
+    "hostageKillsKick": "Выгнать после (x) убитых заложников",
+    "allowFlashlight": "Разрешить фонарик",
+    "autocrosshair": "Автоприцел"
+  },
+  "errors": {
+    "usernameRequired": "Имя пользователя обязательно",
+    "passwordRequired": "Пароль обязателен",
+    "notAuthenticated": "ОШИБКА: Не авторизован",
+    "authFailed": "ОШИБКА: Ошибка авторизации - токен истёк",
+    "insufficientPermissions": "ОШИБКА: Недостаточно прав",
+    "rateLimitExceeded": "ОШИБКА: Превышен лимит запросов - подождите",
+    "commandFailed": "ОШИБКА: Не удалось выполнить команду ({status})",
+    "failedToGetSettings": "Не удалось получить текущие настройки",
+    "settingsTimeout": "Тайм-аут: Настройки не получены от сервера",
+    "invalidCredentials": "Неверное имя пользователя или пароль",
+    "tooManyAttempts": "Слишком много попыток. Попробуйте позже.",
+    "adminDisabled": "Панель админа отключена на сервере",
+    "loginFailed": "Ошибка входа. Попробуйте снова.",
+    "invalidToken": "Получен недействительный токен",
+    "failedToFetchSalt": "Не удалось получить соль",
+    "noToken": "ОШИБКА: Токен авторизации недоступен"
+  },
+  "logs": {
+    "connectedToServer": "Подключено к логам сервера",
+    "historyLoaded": "Загружено {count} записей истории",
+    "disconnected": "Отключено от сервера",
+    "reconnecting": "Переподключение..."
+  }
+}
