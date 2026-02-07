@@ -54,12 +54,12 @@ To run the game, you must provide original **Half-Life game files** from Steam. 
 
 ### 📦 `valve.zip` Structure
 
+The `valve.zip` file must contain the following two directories from your Steam installation:
+
 ```plaintext
 valve.zip
 └── valve/
 ```
-
-The `valve.zip` file must contain the following two directories from your Steam installation:
 
 ### ✅ Prerequisites
 
