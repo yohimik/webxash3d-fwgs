@@ -38,13 +38,13 @@ To run the game, you must provide original **Counter-Strike 1.6 game files** fro
 
 ### 📦 `valve.zip` Structure
 
+The `valve.zip` file must contain the following two directories from your Steam installation:
+
 ```plaintext
 valve.zip
 ├── valve/
 └── cstrike/
 ```
-
-The `valve.zip` file must contain the following two directories from your Steam installation:
 
 ### ✅ Prerequisites
 
